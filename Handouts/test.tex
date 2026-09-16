@@ -1,0 +1,81 @@
+\documentclass{scrartcl}
+
+\usepackage{wrapfig}
+\usepackage{epigraph}
+\renewcommand{\epigraphsize}{\scriptsize}
+\renewcommand{\epigraphwidth}{60ex}
+
+\usepackage[sexy]{evan}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={Example},
+    pdfpagemode=FullScreen,
+}
+
+\urlstyle{same}
+
+\lstset{frame=tb,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+    \title{INMO 2023/3}
+    \author{Reyaansh Agrawal}
+    \date{\today}
+
+    \maketitle
+
+    \vspace{0.5cm}
+
+    \begin{problem*}
+        Let $\mathbb N$ denote the set of all positive integers. Find all real numbers 
+        $c$ for which there exists a function $f:\mathbb N\to \mathbb N$ satisfying:
+        \begin{itemize}
+            \item for any $x,a\in\mathbb N$, the quantity $\frac{f(x+a)-f(x)}{a}$ is an 
+            integer if and only if $a=1$;
+            \item for all $x\in \mathbb N$, we have $|f(x)-cx|<2023$.
+        \end{itemize}
+    \end{problem*}
+
+
+    \begin{answer*} 
+        All \(c=n+\frac 12\) for some nonnegative integer \(n\) work. To verify 
+        this, define \(f(n)\) such that it satisfies
+        \[f(x)+\frac 14=\begin{cases}cx + \frac 14& x \text{ odd}\\cx + \frac 34& x \text{ even}\end{cases}\]
+        This works.
+    \end{answer*}
+    \begin{soln}
+        We will show a claim:
+
+        \begin{claim*} 
+            For any \(n\in \mathbb N_0\), we have\[\nu_2(f(x+2^{n})-f(x))=n-1\]
+        \end{claim*}
+        \begin{proof} 
+            Simply induct on \(n\). The base case is clear. Assume this is true for some 
+            \(n=k\). Then notice that
+            \[n+1 > \nu_2(f(x + 2^{n+1})-f(x))=\nu_2((f(x + 2^{n+1})-f(x+2^n))+(f(x+2^n)-f(x)))>n-1\]
+            The claim follows.
+        \end{proof}
+        Now, notice that for any \(n\in\mathbb{N}, k\in\mathbb{N}_0\) we have\[f(n)\in (cn-2023, cn + 2023)\]and\[f(n + 2^k)\in (c2^k + cn-2023, c2^k + cn + 2023)\]This gives us that\[c2^k\bmod{2^{n-1}}<2\cdot 2023\qquad \text{and}\qquad c2^k\bmod 2^k \ge 2\cdot 2023\]Equivalently,\[\{2c\}=2c\bmod 1<\frac{2023}{2^{k-2}}\qquad\text{and}\qquad \{c\}=c\bmod 1 \ge \frac{2023}{2^{k-1}}\]Evidently, as \(n\rightarrow \infty\), we get \(\{2c\}=0\). The second inequality rules out \(\{c\}=0\), giving us the claimed solutions.
+    \end{soln}
+\end{document}
