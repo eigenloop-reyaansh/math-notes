@@ -1,7 +1,5 @@
-# macOS
 .DS_Store
 
-# LaTeX build files
 *.aux
 *.fdb_latexmk
 *.fls
