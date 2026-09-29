@@ -1,0 +1,262 @@
+\documentclass[11pt]{scrartcl}
+\usepackage{aura}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc}
+\usepackage{enumitem}
+\usepackage{mathtools}
+\setlist[enumerate]{itemsep=0.35em,topsep=0.35em}
+\setlist[itemize]{itemsep=0.2em,topsep=0.25em}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+
+\newcommand{\f}{f}
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\orb}{\operatorname{Orb}}
+\newcommand{\Fix}{\operatorname{Fix}}
+
+\tikzset{
+  vertex/.style={circle,draw=aurablue,fill=aurablueback,inner sep=2.2pt,font=\small},
+  smallvertex/.style={circle,draw=aurablue,fill=white,inner sep=1.6pt,font=\scriptsize},
+  arrow/.style={-{Stealth[length=2.2mm]},semithick},
+  softarrow/.style={-{Stealth[length=2mm]},thick},
+  dashedarrow/.style={arrow,dashed}
+}
+
+\title{Arrows}
+\author{Reyaansh Agrawal}
+\date{\today}
+
+\begin{document}
+\maketitle
+\vspace{-1.1em}
+
+
+\tableofcontents
+
+\section{Introduction}
+
+The important idea is this: consider a function \(f:S\rightarrow S\). 
+Draw a directed graph \(G\) whose vertices each represent distinct
+elements of \(S\), and draw an edge from \(i\rightarrow f(i)\) for all \(i\in S\).
+
+Every vertex has exactly one arrow leaving it. Several arrows may enter a vertex, and a vertex may even point to itself.
+
+\begin{center}
+\begin{tikzpicture}[node distance=1.55cm]
+  \node[vertex] (a) {$a$};
+  \node[vertex,right=of a] (b) {$b$};
+  \node[vertex,right=of b] (c) {$c$};
+  \node[vertex,below=of b] (d) {$d$};
+  \node[vertex,left=of d] (e) {$e$};
+  \draw[arrow] (a) -- (b);
+  \draw[arrow] (b) -- (c);
+  \draw[arrow] (c) to[bend left=20] (b);
+  \draw[arrow] (d) -- (b);
+  \draw[arrow] (e) -- (b);
+\end{tikzpicture}
+\end{center}
+
+This gives us a very important condition: in our directed graph, every vertex has outdegree exactly one.
+
+\begin{definition}{}{orbit}
+For \(x\in S\), its \emph{orbit} is
+\[
+ x,\ f(x),\ f^2(x),\ f^3(x),\dots.
+\]
+If \(f^k(x)=x\) for some positive integer \(k\), we call \(x\) \emph{periodic}.
+\end{definition}
+
+\begin{claim}{}{repetition}
+If \(S\) is finite, then every orbit eventually repeats a vertex.
+\end{claim}
+
+\begin{proof}
+Among the \(|S|+1\) vertices
+\[
+x,f(x),\dots,f^{|S|}(x)
+\]
+two are equal. Once a value repeats, everything afterwards repeats with the same period.
+\end{proof}
+
+\section{The structure}
+
+\begin{theorem}{Every component is a cycle with trees feeding into it}{structure}
+Let \(f:S\to S\) be a function on a finite set. In the arrow diagram, every weakly connected component contains exactly one directed cycle. Every other vertex eventually reaches that cycle.
+\end{theorem}
+
+\begin{proof}
+Start from any vertex and follow arrows. Since \(S\) is finite, some vertex eventually repeats, producing a directed cycle.
+
+Now suppose one component contained two different directed cycles. Since the component is connected after forgetting arrow directions, there would be a path of underlying edges joining the two cycles. But every vertex has only one outgoing arrow, so no vertex on one cycle can have an outgoing arrow leading away from that cycle. Consequently a path leaving one cycle cannot eventually enter another without some cycle vertex having two outgoing arrows. Contradiction.
+\end{proof}
+
+For example,
+
+\begin{center}
+\begin{tikzpicture}[node distance=1.25cm]
+  \node[smallvertex] (a) {$a$};
+  \node[smallvertex,below right=of a] (b) {$b$};
+  \node[smallvertex,right=of b] (c) {$c$};
+  \node[smallvertex,above right=of c] (d) {$d$};
+  \node[smallvertex,above left=of d] (e) {$e$};
+  \node[smallvertex,below left=of b] (f) {$f$};
+  \node[smallvertex,below=of c] (g) {$g$};
+  \draw[arrow] (a) -- (b);
+  \draw[arrow] (f) -- (b);
+  \draw[arrow] (g) -- (c);
+  \draw[arrow] (b) -- (c);
+  \draw[arrow] (c) -- (d);
+  \draw[arrow] (d) -- (e);
+  \draw[arrow] (e) -- (b);
+\end{tikzpicture}
+\end{center}
+
+This theorem is the main reason arrows are so useful. Most later arguments are just ways of extracting one feature of this picture.
+
+\subsection{Permutations}
+
+\begin{theorem}{Permutation = disjoint cycles}{permutationcycles}
+A permutation of a finite set decomposes uniquely into disjoint directed cycles.
+\end{theorem}
+
+\begin{proof}
+  If \(f\) is a permutation of a finite set, every vertex 
+  also has exactly one arrow entering it. Hence there can 
+  be no trees feeding into a cycle.
+\end{proof}
+Most problems involving a permutation of \([n]=\{1, 2, \dots, n\}\) 
+can be solved in using this.
+
+\begin{claim}{Iteration on a cycle}{cycleiteration}
+If \(x\) lies on a cycle of length \(m\), then
+\[
+f^r(x)=f^s(x)\quad\Longleftrightarrow\quad r\equiv s\pmod m.
+\]
+In particular, \(f^k=\id\) exactly when every cycle length divides \(k\).
+\end{claim}
+
+
+\section{Reading iterates without calculating them}
+
+\begin{definition}{Tail and cycle}{tailcycle}
+For a vertex \(x\), the \emph{tail} is the initial part of its orbit before it first reaches a cycle. The remaining periodic part is its cycle.
+\end{definition}
+
+If the tail has length \(h\) and the cycle has length \(m\), then for every \(k\ge h\),
+\[
+f^k(x)=f^{h+((k-h)\bmod m)}(x).
+\]
+
+
+\begin{claim}{Large exponents are local}{largeexponent}
+For a fixed vertex \(x\), the value of \(f^n(x)\) for large \(n\) depends only on the tail of the component and the length of its cycle.
+\end{claim}
+
+\section{More useful stuff}
+
+Some important and recurring situations:
+
+\begin{itemize}
+  \item \(f\) is injective: Each vertex has outdegree one but
+  also has indegree atmost \(1\). Thus the graph will be the union of 
+  a bunch of cycles and a bunch of infinite chains.
+  \item The domain of \(f\) is finite \textbf{and} \(f\) is injective: 
+  Then since the sum of outdegrees is equal to the sum of indegrees 
+  we have that all indegrees are exactly \(1\). So it's just a bunch 
+  of cycles.
+  \item \(f\) is surjective: Each vertex has outdegree one but also 
+  has indegree atleast \(1\). There's no good characterization apart from 
+  a bunch of cycles with trees (that extend infinitely) feeding into them. 
+  \item The domain of \(f\) is finite \textbf{and} \(f\) is surjective: 
+  Then since the sum of outdegrees is equal to the sum of indegrees 
+  we have that all indegrees are exactly \(1\), so it's just a bunch of 
+  cycles again. 
+\end{itemize}
+
+\section{Problems}
+
+\begin{problem}{IMO 1987/4 generalised}{87imo4g}
+  Find all \(a, b\in\mathbb N\) such that there exists a function 
+  \(f:\mathbb N\rightarrow \mathbb N\) satisfying \[f^a(n)=n+b\quad\forall n\in\mathbb N\]
+\end{problem}
+
+\begin{problem}{Shortlist 2017 N3}{17sln3}
+  Determine all integers $ n\geq 2$ having the following 
+  property: for any integers $a_1,a_2,\ldots, a_n$ whose sum 
+  is not divisible by $n$, there exists an index 
+  $1 \leq i \leq n$ such that none of the numbers
+  $$a_i,a_i+a_{i+1},\ldots,a_i+a_{i+1}+\ldots+a_{i+n-1}$$
+  is divisible by $n$. Here, we let $a_i=a_{i-n}$ when $i >n$.
+\end{problem}
+
+\begin{problem}{APMO 2013/4}{13apmo4}
+  Let $a$ and $b$ be positive integers, and let $A$ and $B$ be finite sets of integers satisfying:
+\begin{itemize}
+    \item $A$ and $B$ are disjoint;
+    \item if $i \in A \cup B$, then $i + a \in A$ or $i - b \in B$.
+\end{itemize}
+Prove $a|A| = b|B|$.
+\end{problem}
+
+
+\begin{problem}{2017 Turkey TST/2/1}{17turtst21}
+  Each two of $n$ students, who attended an activity, 
+  have different ages. It is given that each student shook 
+  hands with at least one student, who did not shake hands 
+  with anyone younger than the other. Find all possible values 
+  of $n$.
+\end{problem}
+\begin{problem}{2023 USAJMO/3}{23jmo3}
+  Consider an $n$-by-$n$ board of unit squares for some odd 
+  positive integer $n$. We say that a collection $C$ of 
+  identical dominoes is a maximal grid-aligned configuration 
+  on the board if $C$ consists of $(n^2-1)/2$ dominoes where 
+  each domino covers exactly two neighboring squares and the 
+  dominoes don't overlap: $C$ then covers all but one square 
+  on the board. We are allowed to slide (but not rotate) a 
+  domino on the board to cover the uncovered square, 
+  resulting in a new maximal grid-aligned configuration 
+  with another square uncovered. Let $k(C)$ be the number of 
+  distinct maximal grid-aligned configurations obtainable 
+  from $C$ by repeatedly sliding dominoes. Find the maximum 
+  value of $k(C)$ as a function of $n$.
+\end{problem}
+
+\begin{problem}{2018 China TST/2/3}{18chntst23}
+  Let $M,a,b,r$ be non-negative integers with $a,r\ge 2$, and suppose there exists a function $f:\mathbb{Z}\rightarrow\mathbb{Z}$ satisfying the following conditions:
+  \begin{itemize}
+    \item For all $n\in \mathbb{Z}$, $f^{(r)}(n)=an+b$ where $f^{(r)}$ denotes the composition of $r$ copies of $f$
+    \item For all $n\ge M$, $f(n)\ge 0$
+    \item For all $n>m>M$, $n-m|f(n)-f(m)$
+  Show that $a$ is a perfect $r$-th power.
+  \end{itemize}
+\end{problem}
+
+\begin{problem}{2015 ISL N6}{15isln6}
+  Let $\mathbb{Z}_{>0}$ denote the set of positive integers. Consider a function $f: \mathbb{Z}_{>0} \to \mathbb{Z}_{>0}$. For any $m, n \in \mathbb{Z}_{>0}$ we write $f^n(m) = \underbrace{f(f(\ldots f}_{n}(m)\ldots))$. Suppose that $f$ has the following two properties:
+
+\begin{itemize}
+  \item if $m, n \in \mathbb{Z}_{>0}$, then $\frac{f^n(m) - m}{n} \in \mathbb{Z}_{>0}$;
+  \item The set $\mathbb{Z}_{>0} \setminus \{f(n) \mid n\in \mathbb{Z}_{>0}\}$ is finite.
+\end{itemize} 
+
+Prove that the sequence $f(1) - 1, f(2) - 2, f(3) - 3, \ldots$ is periodic.
+\end{problem}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.45}
+\begin{tabular}{p{0.41\linewidth} p{0.45\linewidth}}
+\textbf{Problem language} & \textbf{Arrow translation}\\
+\hline
+Repeatedly apply \(f\) & Follow arrows\\
+\(f^k(x)=x\) & \(x\) lies on a cycle of length dividing \(k\)\\
+\(f^2=f\) & Every arrow lands at a fixed point\\
+\(f^2=\id\) & Loops and 2-cycles only\\
+\(f\) is a permutation & Every component is a cycle\\
+Finite state space & A repeated vertex is unavoidable\\
+Injective on a finite set & No vertex has two incoming arrows\\
+Surjective on a finite set & Every vertex has an incoming arrow\\
+\end{tabular}
+\end{center}
+
+\end{document}
