@@ -59,10 +59,7 @@ Every vertex has exactly one arrow leaving it. Several arrows may enter a vertex
 This gives us a very important condition: in our directed graph, every vertex has outdegree exactly one.
 
 \begin{definition}{}{orbit}
-For \(x\in S\), its \emph{orbit} is
-\[
- x,\ f(x),\ f^2(x),\ f^3(x),\dots.
-\]
+For \(x\in S\), its \emph{orbit} is \[x,\ f(x),\ f^2(x),\ f^3(x),\dots\]
 If \(f^k(x)=x\) for some positive integer \(k\), we call \(x\) \emph{periodic}.
 \end{definition}
 
@@ -71,14 +68,11 @@ If \(S\) is finite, then every orbit eventually repeats a vertex.
 \end{claim}
 
 \begin{proof}
-Among the \(|S|+1\) vertices
-\[
-x,f(x),\dots,f^{|S|}(x)
-\]
+Among the \(|S|+1\) vertices \[x,f(x),\dots,f^{|S|}(x)\]
 two are equal. Once a value repeats, everything afterwards repeats with the same period.
 \end{proof}
 
-\section{The structure}
+\section{The general structure}
 
 \begin{theorem}{Every component is a cycle with trees feeding into it}{structure}
 Let \(f:S\to S\) be a function on a finite set. In the arrow diagram, every weakly connected component contains exactly one directed cycle. Every other vertex eventually reaches that cycle.
@@ -128,10 +122,7 @@ Most problems involving a permutation of \([n]=\{1, 2, \dots, n\}\)
 can be solved in using this.
 
 \begin{claim}{Iteration on a cycle}{cycleiteration}
-If \(x\) lies on a cycle of length \(m\), then
-\[
-f^r(x)=f^s(x)\quad\Longleftrightarrow\quad r\equiv s\pmod m.
-\]
+If \(x\) lies on a cycle of length \(m\), then \[f^r(x)=f^s(x)\quad\Longleftrightarrow\quad r\equiv s\pmod m\]
 In particular, \(f^k=\id\) exactly when every cycle length divides \(k\).
 \end{claim}
 
@@ -142,10 +133,7 @@ In particular, \(f^k=\id\) exactly when every cycle length divides \(k\).
 For a vertex \(x\), the \emph{tail} is the initial part of its orbit before it first reaches a cycle. The remaining periodic part is its cycle.
 \end{definition}
 
-If the tail has length \(h\) and the cycle has length \(m\), then for every \(k\ge h\),
-\[
-f^k(x)=f^{h+((k-h)\bmod m)}(x).
-\]
+If the tail has length \(h\) and the cycle has length \(m\), then for every \(k\ge h\), we have\[f^k(x)=f^{h+((k-h)\bmod m)}(x)\]
 
 
 \begin{claim}{Large exponents are local}{largeexponent}
